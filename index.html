@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>College Cost Strategist™</title>
+
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --navy-mid: #1a2e44;
+    --navy-light: #243d56;
+    --gold: #c9a84c;
+    --gold-light: #e8c96e;
+    --gold-pale: #f5e9c8;
+    --cream: #faf7f0;
+    --white: #ffffff;
+    --slate: #8a9bb0;
+    --slate-light: #b8c8d8;
+    --red-accent: #c04a3a;
+    --green-accent: #3a7d60;
+    --text-dark: #0d1b2a;
+    --text-mid: #3a4f65;
+    --text-light: #6b7f96;
+    --border: rgba(201,168,76,0.2);
+    --shadow-soft: 0 4px 24px rgba(13,27,42,0.08);
+    --shadow-mid: 0 8px 40px rgba(13,27,42,0.14);
+    --shadow-strong: 0 16px 60px rgba(13,27,42,0.22);
+    --radius: 12px;
+    --radius-lg: 20px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--navy);
+    padding: 0 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--gold);
+    box-shadow: var(--shadow-mid);
+  }
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .logo-mark {
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 900;
+    font-size: 1.35rem;
+    color: var(--gold);
+    letter-spacing: -0.02em;
+  }
+  .logo-tm {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.65rem;
+    color: var(--slate);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .progress-pill {
+    background: rgba(201,168,76,0.12);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 0.3rem 0.9rem;
+    border-radius: 100px;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  .save-btn {
+    background: var(--gold);
+    color: var(--navy);
+    border: none;
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 600;
+    font-size: 0.82rem;
+    padding: 0.45rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .save-btn:hover { background: var(--gold-light); }
+
+  /* ── NAV TABS ── */
+  .nav-wrapper {
+    background: var(--navy-mid);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-wrapper::-webkit-scrollbar { display: none; }
+  .nav-tabs {
+    display: flex;
+    padding: 0 2.5rem;
+    gap: 0;
+    min-width: max-content;
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    color: var(--slate);
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .tab-btn .tab-num {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.65rem;
+    background: rgba(138,155,176,0.2);
+    color: var(--slate);
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover { color: var(--gold-light); }
+  .tab-btn.active { color: var(--gold); }
+  .tab-btn.active .tab-num {
+    background: rgba(201,168,76,0.2);
+    color: var(--gold);
+  }
+  .tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+  }
+  .tab-btn.complete .tab-num {
+    background: rgba(58,125,96,0.25);
+    color: #6ecfaa;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main { padding: 2.5rem; max-width: 1200px; margin: 0 auto; }
+
+  .section { display: none; animation: fadeIn 0.3s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── SECTION HEADERS ── */
+  .section-header {
+    margin-bottom: 2rem;
+  }
+  .section-eyebrow {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .section-title {
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.15;
+  }
+  .section-desc {
+    margin-top: 0.6rem;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    max-width: 620px;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    border: 1px solid rgba(201,168,76,0.12);
+    box-shadow: var(--shadow-soft);
+    margin-bottom: 1.25rem;
+  }
+  .card-title {
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .card-title .icon {
+    width: 28px; height: 28px;
+    background: var(--gold-pale);
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+  }
+
+  /* ── FORM ELEMENTS ── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+  .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-group.full { grid-column: 1 / -1; }
+  label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--text-mid);
+    text-transform: uppercase;
+  }
+  input[type="text"], input[type="number"], input[type="email"],
+  select, textarea {
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    background: var(--cream);
+    border: 1.5px solid rgba(13,27,42,0.1);
+    border-radius: 9px;
+    padding: 0.6rem 0.9rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+    background: var(--white);
+  }
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* ── RANGE SLIDER ── */
+  .range-group { display: flex; flex-direction: column; gap: 0.5rem; }
+  .range-label-row {
+    display: flex; justify-content: space-between;
+    font-size: 0.78rem; color: var(--text-light);
+  }
+  .range-val {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85rem;
+    color: var(--gold);
+    font-weight: 500;
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 5px;
+    background: rgba(13,27,42,0.1);
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 3px solid var(--white);
+    box-shadow: 0 2px 8px rgba(201,168,76,0.4);
+    cursor: pointer;
+  }
+
+  /* ── COLLEGE LIST ── */
+  .college-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 40px;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.9rem 1rem;
+    background: var(--cream);
+    border-radius: 10px;
+    margin-bottom: 0.6rem;
+    border: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .college-row:hover { border-color: var(--border); }
+  .tier-badge {
+    font-size: 0.68rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 500;
+    padding: 0.25rem 0.55rem;
+    border-radius: 5px;
+    text-align: center;
+  }
+  .tier-reach { background: rgba(192,74,58,0.1); color: var(--red-accent); }
+  .tier-match { background: rgba(201,168,76,0.12); color: #8a6d1a; }
+  .tier-safety { background: rgba(58,125,96,0.12); color: var(--green-accent); }
+  .del-btn {
+    background: none;
+    border: none;
+    color: var(--slate);
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 0.2rem;
+    border-radius: 5px;
+    transition: color 0.2s, background 0.2s;
+  }
+  .del-btn:hover { color: var(--red-accent); background: rgba(192,74,58,0.08); }
+  .add-row-btn {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.82rem; font-weight: 600; color: var(--gold);
+    background: none; border: 1.5px dashed rgba(201,168,76,0.35);
+    border-radius: 9px; padding: 0.6rem 1rem; cursor: pointer;
+    width: 100%; justify-content: center;
+    transition: all 0.2s; margin-top: 0.5rem;
+  }
+  .add-row-btn:hover { background: rgba(201,168,76,0.06); border-color: var(--gold); }
+
+  /* ── AID TABLE ── */
+  .aid-table { width: 100%; border-collapse: collapse; }
+  .aid-table th {
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.07em;
+    text-transform: uppercase; color: var(--text-light);
+    padding: 0.6rem 0.8rem; text-align: left;
+    border-bottom: 1.5px solid rgba(13,27,42,0.08);
+  }
+  .aid-table td {
+    padding: 0.75rem 0.8rem;
+    font-size: 0.88rem;
+    border-bottom: 1px solid rgba(13,27,42,0.05);
+  }
+  .aid-table tr:last-child td { border-bottom: none; }
+  .aid-table input[type="number"] {
+    width: 130px;
+    padding: 0.4rem 0.7rem;
+    font-size: 0.85rem;
+  }
+  .money-display {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    color: var(--green-accent);
+    font-weight: 500;
+  }
+  .net-cost {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  /* ── ROI METER ── */
+  .roi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .roi-card {
+    background: var(--navy);
+    border-radius: var(--radius);
+    padding: 1.4rem 1.2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .roi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gold);
+  }
+  .roi-label {
+    font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--slate); font-family: 'Courier New', Courier, monospace;
+    margin-bottom: 0.5rem;
+  }
+  .roi-value {
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--gold);
+  }
+  .roi-sub { font-size: 0.72rem; color: var(--slate-light); margin-top: 0.3rem; }
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 10px; bottom: 10px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--gold), rgba(201,168,76,0.1));
+  }
+  .tl-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+  }
+  .tl-dot {
+    position: absolute;
+    left: -2rem;
+    top: 4px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 2.5px solid var(--gold);
+    transition: all 0.2s;
+  }
+  .tl-item.done .tl-dot {
+    background: var(--gold);
+  }
+  .tl-month {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.68rem;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+  }
+  .tl-task {
+    font-size: 0.88rem;
+    color: var(--text-dark);
+    font-weight: 500;
+  }
+  .tl-note {
+    font-size: 0.78rem;
+    color: var(--text-light);
+    margin-top: 0.2rem;
+    line-height: 1.5;
+  }
+  .tl-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+  }
+  .tl-check input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: var(--gold);
+    cursor: pointer;
+    flex-shrink: 0;
+    border: none;
+    background: none;
+    padding: 0;
+  }
+
+  /* ── OFFERS TABLE ── */
+  .offers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  .offer-card {
+    background: var(--white);
+    border: 1.5px solid rgba(201,168,76,0.15);
+    border-radius: var(--radius);
+    padding: 1.4rem;
+    position: relative;
+  }
+  .offer-card.winner {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, #fff 80%, rgba(201,168,76,0.05));
+  }
+  .winner-badge {
+    position: absolute;
+    top: -1px; right: 1rem;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.7rem;
+    border-radius: 0 0 6px 6px;
+  }
+  .offer-school { font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif; font-size: 1rem; font-weight: 600; color: var(--navy); margin-bottom: 0.8rem; }
+  .offer-line { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 0.3rem 0; border-bottom: 1px solid rgba(13,27,42,0.05); }
+  .offer-line:last-child { border-bottom: none; }
+  .offer-line .lbl { color: var(--text-light); }
+  .offer-line .val { font-family: 'Courier New', Courier, monospace; font-weight: 500; color: var(--text-dark); }
+  .offer-line .val.green { color: var(--green-accent); }
+  .offer-line .val.navy { color: var(--navy); font-weight: 700; font-size: 0.95rem; }
+
+  /* ── DECISION ── */
+  .decision-hero {
+    background: var(--navy);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .decision-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.18) 0%, transparent 65%);
+  }
+  .decision-hero h2 {
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    position: relative;
+  }
+  .decision-hero p {
+    color: var(--slate-light);
+    font-size: 0.88rem;
+    position: relative;
+  }
+  .score-bars { display: flex; flex-direction: column; gap: 0.75rem; }
+  .score-row { display: flex; align-items: center; gap: 1rem; }
+  .score-lbl { font-size: 0.82rem; font-weight: 500; color: var(--text-mid); min-width: 160px; }
+  .score-bar { flex: 1; height: 8px; background: rgba(13,27,42,0.08); border-radius: 10px; overflow: hidden; }
+  .score-fill { height: 100%; border-radius: 10px; background: var(--gold); transition: width 0.8s ease; }
+  .score-val { font-family: 'Courier New', Courier, monospace; font-size: 0.8rem; color: var(--gold); min-width: 2.5rem; text-align: right; }
+
+  /* ── STRATEGY NOTES ── */
+  .strategy-box {
+    background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.02));
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.4rem;
+    margin-top: 1.2rem;
+  }
+  .strategy-box h4 {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 0.6rem;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  .strategy-box ul {
+    padding-left: 1.2rem;
+    display: flex; flex-direction: column; gap: 0.4rem;
+  }
+  .strategy-box li { font-size: 0.85rem; color: var(--text-mid); line-height: 1.5; }
+
+  /* ── SECTION FOOTER NAV ── */
+  .section-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(13,27,42,0.08);
+  }
+  .nav-btn {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 600; font-size: 0.84rem;
+    padding: 0.6rem 1.4rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+  .nav-btn.prev {
+    background: none;
+    color: var(--text-light);
+    border: 1.5px solid rgba(13,27,42,0.15);
+  }
+  .nav-btn.prev:hover { border-color: var(--navy); color: var(--navy); }
+  .nav-btn.next {
+    background: var(--navy);
+    color: var(--gold);
+  }
+  .nav-btn.next:hover { background: var(--navy-mid); }
+  .step-indicator {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    color: var(--slate);
+  }
+
+  /* ── UTILITY ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.1rem; }
+  .stat-box {
+    background: var(--white);
+    border: 1px solid rgba(201,168,76,0.12);
+    border-radius: var(--radius);
+    padding: 1.2rem;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: Helvetica, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .stat-lbl { font-size: 0.72rem; color: var(--text-light); margin-top: 0.2rem; }
+  .chip-group { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+  .chip {
+    background: var(--gold-pale);
+    color: #7a5c00;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.7rem;
+    border-radius: 100px;
+    border: 1px solid rgba(201,168,76,0.3);
+  }
+  .divider { height: 1px; background: rgba(13,27,42,0.07); margin: 1.25rem 0; }
+
+  @media (max-width: 768px) {
+    .main { padding: 1.25rem; }
+    .form-grid, .form-grid-3, .two-col, .three-col, .roi-grid, .offers-grid { grid-template-columns: 1fr; }
+    .college-row { grid-template-columns: 1fr 1fr; }
+    .college-row > *:nth-child(3), .college-row > *:nth-child(4) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <span class="logo-mark">College Cost Strategist™</span>
+    <span class="logo-tm">™</span>
+  </div>
+  <div class="header-right">
+    <span class="progress-pill" id="progressPill">Step 1 of 9</span>
+    <button class="save-btn" onclick="saveData()">💾 Export</button>
+    <button class="save-btn" onclick="clearStorage()" style="background:transparent;border:1px solid rgba(201,168,76,0.4);color:var(--slate);">🗑 Clear</button>
+  </div>
+</header>
+
+<nav class="nav-wrapper">
+  <div class="nav-tabs" id="navTabs">
+    <button class="tab-btn active" onclick="showSection(0)" data-idx="0"><span class="tab-num">01</span> Student Profile</button>
+    <button class="tab-btn" onclick="showSection(1)" data-idx="1"><span class="tab-num">02</span> College List</button>
+    <button class="tab-btn" onclick="showSection(2)" data-idx="2"><span class="tab-num">03</span> Strategy</button>
+    <button class="tab-btn" onclick="showSection(3)" data-idx="3"><span class="tab-num">04</span> Cost &amp; ROI</button>
+    <button class="tab-btn" onclick="showSection(4)" data-idx="4"><span class="tab-num">05</span> Financial Aid</button>
+    <button class="tab-btn" onclick="showSection(5)" data-idx="5"><span class="tab-num">06</span> Scholarships</button>
+    <button class="tab-btn" onclick="showSection(6)" data-idx="6"><span class="tab-num">07</span> Applications</button>
+    <button class="tab-btn" onclick="showSection(7)" data-idx="7"><span class="tab-num">08</span> Offers &amp; Negotiation</button>
+    <button class="tab-btn" onclick="showSection(8)" data-idx="8"><span class="tab-num">09</span> Timeline &amp; Action Plan</button>
+    <button class="tab-btn" onclick="showSection(9)" data-idx="9"><span class="tab-num">10</span> Final Decision</button>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- ═══════════════════════════════ 1. STUDENT PROFILE ═══════════════════════════════ -->
+  <div class="section active" id="sec-0">
+    <div class="section-header">
+      <div class="section-eyebrow">Section 01</div>
+      <h1 class="section-title">Student Profile</h1>
+      <p class="section-desc">Build a complete picture of the student—academic record, interests, and family context—to guide every cost decision ahead.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">👤</span>Personal Information</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Student Name</label><input type="text" id="studentName" placeholder="Full legal name"></div>
+        <div class="form-group"><label>Grade / Year</label>
+          <select id="grade">
+            <option>9th Grade (Freshman)</option>
+            <option>10th Grade (Sophomore)</option>
+            <option>11th Grade (Junior)</option>
+            <option selected>12th Grade (Senior)</option>
+          </select>
+        </div>
+        <div class="form-group"><label>High School</label><input type="text" id="highSchool" placeholder="School name & city"></div>
+        <div class="form-group"><label>Intended Enrollment</label>
+          <select id="enrollYear">
+            <option>Fall 2025</option><option selected>Fall 2026</option><option>Fall 2027</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Email</label><input type="email" id="studentEmail" placeholder="student@email.com"></div>
+        <div class="form-group"><label>Parent/Guardian Contact</label><input type="text" id="parentContact" placeholder="Name & phone"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📊</span>Academic Record</div>
+      <div class="form-grid-3">
+        <div class="form-group"><label>Unweighted GPA</label><input type="number" id="gpa" placeholder="0.0 – 4.0" min="0" max="4" step="0.01"></div>
+        <div class="form-group"><label>Weighted GPA</label><input type="number" id="wgpa" placeholder="0.0 – 5.0" min="0" max="5" step="0.01"></div>
+        <div class="form-group"><label>Class Rank</label><input type="text" id="rank" placeholder="e.g. Top 10%"></div>
+        <div class="form-group"><label>SAT Score</label><input type="number" id="sat" placeholder="400 – 1600" min="400" max="1600"></div>
+        <div class="form-group"><label>ACT Score</label><input type="number" id="act" placeholder="1 – 36" min="1" max="36"></div>
+        <div class="form-group"><label>AP / IB Courses</label><input type="number" id="ap" placeholder="Total # taken" min="0"></div>
+      </div>
+      <div class="divider"></div>
+      <div class="form-group">
+        <label>Intended Major / Field of Study</label>
+        <input type="text" id="major" placeholder="e.g. Mechanical Engineering, Nursing, Undecided">
+      </div>
+      <div class="form-group" style="margin-top:1rem">
+        <label>Key Extracurriculars & Honors</label>
+        <textarea id="extras" placeholder="List clubs, sports, awards, community service…"></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🏡</span>Family Financial Snapshot</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Household Size</label><input type="number" id="hhSize" placeholder="# of people in household" min="1"></div>
+        <div class="form-group"><label>Number in College</label><input type="number" id="inCollege" placeholder="Including this student" min="1"></div>
+        <div class="form-group"><label>Dependency Status</label>
+          <select id="depStatus"><option selected>Dependent (claimed by parents)</option><option>Independent</option></select>
+        </div>
+        <div class="form-group"><label>Tax Filing Status</label>
+          <select id="taxStatus"><option>Married Filing Jointly</option><option>Single</option><option>Head of Household</option></select>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Adjusted Gross Income (AGI)</label>
+          <input type="number" id="agi" placeholder="$" min="0" step="1000">
+        </div>
+        <div class="form-group">
+          <label>Total Assets (savings, investments)</label>
+          <input type="number" id="assets" placeholder="$" min="0" step="1000">
+        </div>
+        <div class="form-group">
+          <label>Student Income (annual)</label>
+          <input type="number" id="studentIncome" placeholder="$" min="0" step="500">
+        </div>
+        <div class="form-group">
+          <label>Max Comfortable Annual Budget</label>
+          <input type="number" id="budget" placeholder="$" min="0" step="1000">
+        </div>
+      </div>
+      <div class="strategy-box" style="margin-top:1.2rem">
+        <h4>💡 Planning Note</h4>
+        <ul>
+          <li>Your SAR / Student Aid Index (SAI) from FAFSA will determine need-based eligibility. File by October 1st (FAFSA opens).</li>
+          <li>Having multiple children in college simultaneously can significantly increase your aid package.</li>
+          <li>Assets held in the student's name are assessed at a higher rate (20%) than parent assets (~5.6%).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-nav">
+      <span></span>
+      <span class="step-indicator">1 of 10</span>
+      <button class="nav-btn next" onclick="showSection(1)">College List →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ 2. COLLEGE LIST ═══════════════════════════════ -->
+  <div class="section" id="sec-1">
+    <div class="section-header">
+      <div class="section-eyebrow">Section 02</div>
+      <h1 class="section-title">College List</h1>
+      <p class="section-desc">Build a balanced list of Reach, Match, and Safety schools. A good list has 2–3 of each category.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🎯</span>My College List</div>
+      <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr 40px; gap:0.75rem; padding:0.5rem 1rem; margin-bottom:0.5rem;">
+        <span style="font-size:0.7rem;font-weight:700;color:var(--text-light);letter-spacing:0.06em;text-transform:uppercase;">School Name</span>
+        <span style="font-size:0.7rem;font-weight:700;color:var(--text-light);letter-spacing:0.06em;text-transform:uppercase;">Tier</span>
+        <span style="font-size:0.7rem;font-weight:700;color:var(--text-light);letter-spacing:0.06em;text-transform:uppercase;">Est. COA</span>
+        <span style="font-size:0.7rem;font-weight:700;color:var(--text-light);letter-spacing:0.06em;text-transform:uppercase;">Deadline</span>
+        <span></span>
+      </div>
+      <div id="collegeList">
+        <!-- rows injected by JS -->
+      </div>
+      <button class="add-row-btn" onclick="addCollegeRow()">+ Add School</button>
+
+      <div class="divider"></div>
+      <div class="three-col" style="margin-top:0.5rem;">
+        <div class="stat-box"><div class="stat-num" id="reachCount">0</div><div class="stat-lbl">Reach Schools</div></div>
+        <div class="stat-box"><div class="stat-num" id="matchCount">0</div><div class="stat-lbl">Match Schools</div></div>
+        <div class="stat-box"><div class="stat-num" id="safetyCount">0</div><div class="stat-lbl">Safety Schools</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🔍</span>Research Notes by School</div>
+      <textarea id="collegeNotes" style="min-height:120px;" placeholder="Note financial aid policies, merit scholarships, net price calculator results, known generosity (meets 100% of need, etc.) for each school…"></textarea>
+    </div>
+
+    <div class="section-nav">
+      <button class="nav-btn prev" onclick="showSection(0)">← Student Profile</button>
+      <span class="step-indicator">2 of 10</span>
+      <button class="nav-btn next" onclick="showSection(2)">Strategy →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ 3. STRATEGY ═══════════════════════════════ -->
+  <div class="section" id="sec-2">
+    <div class="section-header">
+      <div class="section-eyebrow">Section 03</div>
+      <h1 class="section-title">Cost Strategy</h1>
+      <p class="section-desc">Define your family's approach to financing college before you receive any offers. Clarity now prevents regret later.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title"><span class="icon">💼</span>Funding Sources</div>
+        <p style="font-size:0.82rem;color:var(--text-light);margin-bottom:1rem;">Check all that apply to your family:</p>
+        <div style="display:flex;flex-direction:column;gap:0.6rem;" id="fundingSources">
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;color:var(--text-dark);text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> 529 Plan / Education Savings</label>
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;color:var(--text-dark);text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> Parent PLUS Loans</label>
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;color:var(--text-dark);text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> Federal Subsidized/Unsubsidized Loans</label>
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;color:var(--text-dark);text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> Private / Alternative Loans</label>
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;color:var(--text-dark);text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> Merit Scholarships (external)</label>
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;color:var(--text-dark);text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> Student Work / Co-op Earnings</label>
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;color:var(--text-dark);text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> Employer Tuition Assistance</label>
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;color:var(--text-dark);text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> Grandparent / Family Contributions</label>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="icon">📏</span>Budget Boundaries</div>
+        <div style="display:flex;flex-direction:column;gap:1.3rem;">
+          <div class="range-group">
+            <label>Max Total Debt at Graduation</label>
+            <div class="range-label-row"><span>$0</span><span class="range-val" id="debtVal">$30,000</span><span>$150,000</span></div>
+            <input type="range" id="debtRange" min="0" max="150000" step="5000" value="30000"
+              oninput="document.getElementById('debtVal').textContent='$'+parseInt(this.value).toLocaleString()">
+          </div>
+          <div class="range-group">
+            <label>Max Annual Out-of-Pocket</label>
+            <div class="range-label-row"><span>$0</span><span class="range-val" id="oopVal">$20,000</span><span>$80,000</span></div>
+            <input type="range" id="oopRange" min="0" max="80000" step="1000" value="20000"
+              oninput="document.getElementById('oopVal').textContent='$'+parseInt(this.value).toLocaleString()">
+          </div>
+          <div class="range-group">
+            <label>529 / Savings Available</label>
+            <div class="range-label-row"><span>$0</span><span class="range-val" id="savingsVal">$50,000</span><span>$200,000</span></div>
+            <input type="range" id="savingsRange" min="0" max="200000" step="5000" value="50000"
+              oninput="document.getElementById('savingsVal').textContent='$'+parseInt(this.value).toLocaleString()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🧭</span>Strategic Priorities</div>
+      <div class="form-group">
+        <label>Primary College Goal</label>
+        <select id="primaryGoal">
+          <option>Minimize total student debt</option>
+          <option>Attend highest-ranked affordable school</option>
+          <option>Best fit for major/career path</option>
+          <option>Stay within specific geographic region</option>
+          <option>Maximize scholarship dollars</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-top:1rem;">
+        <label>Non-Negotiable Requirements</label>
+        <textarea id="nonNeg" placeholder="e.g. Must have nursing accreditation, need Division I athletics, must be within 4 hours of home…"></textarea>
+      </div>
+      <div class="form-group" style="margin-top:1rem;">
+        <label>Negotiation Comfort Level</label>
+        <select id="negComfort">
+          <option>Very comfortable — will appeal every offer</option>
+          <option selected>Comfortable — will appeal if package seems low</option>
+          <option>Neutral — will appeal if competing offers exist</option>
+          <option>Uncomfortable — prefer to avoid negotiation</option>
+        </select>
+      </div>
+      <div class="strategy-box">
+        <h4>📋 Strategic Reminders</h4>
+        <ul>
+          <li>Schools that "meet 100% of demonstrated need" are not the same as schools that give the most free money—look at how they define need and the grant vs. loan split.</li>
+          <li>Merit aid is usually tied to GPA maintenance. Understand the renewal requirements before committing.</li>
+          <li>Early Decision is binding and limits leverage. Early Action preserves options.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-nav">
+      <button class="nav-btn prev" onclick="showSection(1)">← College List</button>
+      <span class="step-indicator">3 of 10</span>
+      <button class="nav-btn next" onclick="showSection(3)">Cost & ROI →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ 4. COST & ROI ═══════════════════════════════ -->
+  <div class="section" id="sec-3">
+    <div class="section-header">
+      <div class="section-eyebrow">Section 04</div>
+      <h1 class="section-title">Cost &amp; ROI Analysis</h1>
+      <p class="section-desc">Break down the true cost of attendance and model the return on investment against expected career earnings.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🧾</span>Cost of Attendance Breakdown (Annual)</div>
+      <table class="aid-table" id="coaTable">
+        <thead><tr>
+          <th>School</th><th>Tuition & Fees</th><th>Room & Board</th><th>Books & Supplies</th><th>Personal/Trans.</th><th>Total COA</th>
+        </tr></thead>
+        <tbody id="coaBody"></tbody>
+      </table>
+      <div class="strategy-box" style="margin-top:1rem;">
+        <h4>🔑 COA Quick Facts</h4>
+        <ul>
+          <li><strong>In-state public:</strong> ~$27,000/yr average</li>
+          <li><strong>Out-of-state public:</strong> ~$45,000/yr average</li>
+          <li><strong>Private non-profit:</strong> ~$57,000/yr average</li>
+          <li>Use each school's Net Price Calculator for a personalized estimate before the offer letter arrives.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📈</span>ROI Modeling</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Intended Career / Industry</label><input type="text" id="career" placeholder="e.g. Registered Nurse, Software Engineer"></div>
+        <div class="form-group"><label>Expected Starting Salary</label><input type="number" id="startSalary" placeholder="$" min="0" step="1000"></div>
+        <div class="form-group"><label>10-Year Median Salary (est.)</label><input type="number" id="midSalary" placeholder="$" min="0" step="1000"></div>
+        <div class="form-group"><label>Expected Graduation Debt</label><input type="number" id="gradDebt" placeholder="$" min="0" step="1000"></div>
+      </div>
+      <div class="roi-grid" style="margin-top:1.5rem;" id="roiGrid">
+        <div class="roi-card"><div class="roi-label">Debt-to-Income Ratio</div><div class="roi-value" id="roiDTI">—</div><div class="roi-sub">Should be below 1.0×</div></div>
+        <div class="roi-card"><div class="roi-label">Break-Even (years)</div><div class="roi-value" id="roiBE">—</div><div class="roi-sub">Years to repay on std. plan</div></div>
+        <div class="roi-card"><div class="roi-label">Monthly Payment Est.</div><div class="roi-value" id="roiMP">—</div><div class="roi-sub">10-yr federal std. repayment</div></div>
+      </div>
+      <button onclick="calcROI()" style="margin-top:1rem;background:var(--navy);color:var(--gold);border:none;padding:0.55rem 1.3rem;border-radius:9px;font-family:Helvetica,'Helvetica Neue',Arial,sans-serif;font-weight:600;font-size:0.84rem;cursor:pointer;">Calculate ROI →</button>
+    </div>
+
+    <div class="section-nav">
+      <button class="nav-btn prev" onclick="showSection(2)">← Strategy</button>
+      <span class="step-indicator">4 of 10</span>
+      <button class="nav-btn next" onclick="showSection(4)">Financial Aid →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ 5. FINANCIAL AID ═══════════════════════════════ -->
+  <div class="section" id="sec-4">
+    <div class="section-header">
+      <div class="section-eyebrow">Section 05</div>
+      <h1 class="section-title">Financial Aid</h1>
+      <p class="section-desc">Track FAFSA, CSS Profile, and institutional aid applications. Know your Student Aid Index and what it means for each school.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title"><span class="icon">📝</span>FAFSA Tracker</div>
+        <div style="display:flex;flex-direction:column;gap:0.9rem;">
+          <div class="form-group"><label>FSA ID Created (Parent)</label>
+            <select id="fsaParent"><option>Not started</option><option>In progress</option><option>✓ Complete</option></select></div>
+          <div class="form-group"><label>FSA ID Created (Student)</label>
+            <select id="fsaStudent"><option>Not started</option><option>In progress</option><option>✓ Complete</option></select></div>
+          <div class="form-group"><label>FAFSA Submission Status</label>
+            <select id="fafsaStatus"><option>Not submitted</option><option>Submitted</option><option>✓ Processed (SAR received)</option></select></div>
+          <div class="form-group"><label>Student Aid Index (SAI)</label>
+            <input type="number" id="sai" placeholder="From your SAR" min="-1500"></div>
+          <div class="form-group"><label>Tax Year Used</label>
+            <input type="text" id="taxYear" placeholder="e.g. 2023 tax year"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="icon">🏛️</span>CSS Profile</div>
+        <div style="display:flex;flex-direction:column;gap:0.9rem;">
+          <div class="form-group"><label>CSS Required?</label>
+            <select id="cssRequired"><option>No CSS schools on my list</option><option>Yes — 1–3 schools</option><option>Yes — 4+ schools</option></select></div>
+          <div class="form-group"><label>CSS Submission Status</label>
+            <select id="cssStatus"><option>Not applicable</option><option>Not submitted</option><option>Submitted</option><option>✓ Acknowledged</option></select></div>
+          <div class="form-group"><label>CSS Schools (list names)</label>
+            <textarea id="cssSchools" style="min-height:80px;" placeholder="Schools requiring CSS Profile…"></textarea></div>
+          <div class="form-group"><label>Special Circumstances Note</label>
+            <textarea id="specialCirc" style="min-height:60px;" placeholder="Divorce, medical expenses, job loss, one-time income…"></textarea></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">💰</span>Expected Aid by School</div>
+      <table class="aid-table" id="aidTable">
+        <thead><tr>
+          <th>School</th><th>Est. Need-Based Grant</th><th>Merit Aid Est.</th><th>Work-Study</th><th>Sub. Loans</th><th>Unsub. Loans</th><th>Total Free $</th>
+        </tr></thead>
+        <tbody id="aidBody"></tbody>
+      </table>
+    </div>
+
+    <div class="section-nav">
+      <button class="nav-btn prev" onclick="showSection(3)">← Cost & ROI</button>
+      <span class="step-indicator">5 of 10</span>
+      <button class="nav-btn next" onclick="showSection(5)">Scholarships →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ 6. SCHOLARSHIPS ═══════════════════════════════ -->
+  <div class="section" id="sec-5">
+    <div class="section-header">
+      <div class="section-eyebrow">Section 06</div>
+      <h1 class="section-title">Scholarships</h1>
+      <p class="section-desc">Track private scholarship applications separately from institutional aid. Every dollar reduces borrowing.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🏆</span>Scholarship Tracker</div>
+      <div style="overflow-x:auto;">
+        <table class="aid-table" id="scholTable" style="min-width:700px;">
+          <thead><tr>
+            <th>Scholarship Name</th><th>Org / Sponsor</th><th>Amount</th><th>Deadline</th><th>Status</th><th>Notes</th>
+          </tr></thead>
+          <tbody id="scholBody">
+            <tr>
+              <td><input type="text" placeholder="Scholarship name" style="width:160px;"></td>
+              <td><input type="text" placeholder="Sponsor org" style="width:130px;"></td>
+              <td><input type="number" placeholder="$" style="width:90px;"></td>
+              <td><input type="text" placeholder="MM/DD" style="width:80px;"></td>
+              <td><select style="width:120px;"><option>To Apply</option><option>Applied</option><option>Awarded</option><option>Denied</option></select></td>
+              <td><input type="text" placeholder="Notes" style="width:120px;"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="add-row-btn" onclick="addScholRow()" style="margin-top:1rem;">+ Add Scholarship</button>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title"><span class="icon">🔎</span>Where to Search</div>
+        <div class="chip-group">
+          <span class="chip">Fastweb.com</span>
+          <span class="chip">Scholarships.com</span>
+          <span class="chip">Bold.org</span>
+          <span class="chip">College Board BigFuture</span>
+          <span class="chip">Local Community Foundation</span>
+          <span class="chip">Employer Scholarships</span>
+          <span class="chip">State Grants (Texas: TEXAS Grant)</span>
+          <span class="chip">Professional Associations</span>
+          <span class="chip">Rotary / Kiwanis</span>
+          <span class="chip">Religious Organizations</span>
+        </div>
+        <div class="strategy-box" style="margin-top:1rem;">
+          <h4>🎯 Scholarship Strategy</h4>
+          <ul>
+            <li>Focus on local scholarships — fewer applicants, better odds.</li>
+            <li>Reuse essays across applications; build a master essay bank.</li>
+            <li>Apply for renewable scholarships worth $1K–$5K/yr that add up over 4 years.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="icon">📊</span>Scholarship Summary</div>
+        <div style="display:flex;flex-direction:column;gap:0.8rem;">
+          <div class="form-group"><label>Total $ Applied For</label><input type="number" id="scholApplied" placeholder="$" min="0"></div>
+          <div class="form-group"><label>Total $ Awarded</label><input type="number" id="scholAwarded" placeholder="$" min="0"></div>
+          <div class="form-group"><label># Applications Submitted</label><input type="number" id="scholCount" placeholder="#" min="0"></div>
+          <div class="form-group"><label>Essays Drafted & Banked</label><input type="number" id="essayCount" placeholder="#" min="0"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-nav">
+      <button class="nav-btn prev" onclick="showSection(4)">← Financial Aid</button>
+      <span class="step-indicator">6 of 10</span>
+      <button class="nav-btn next" onclick="showSection(6)">Applications →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ 7. APPLICATIONS ═══════════════════════════════ -->
+  <div class="section" id="sec-6">
+    <div class="section-header">
+      <div class="section-eyebrow">Section 07</div>
+      <h1 class="section-title">Applications</h1>
+      <p class="section-desc">Manage every moving part of the application process — tests, essays, recommendations, and portals.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title"><span class="icon">📋</span>Application Checklist</div>
+        <div style="display:flex;flex-direction:column;gap:0.6rem;" id="appChecklist">
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;cursor:pointer;text-transform:none;letter-spacing:0;color:var(--text-dark);"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> Common App / Coalition App account created</label>
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;cursor:pointer;text-transform:none;letter-spacing:0;color:var(--text-dark);"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> All standardized test scores sent</label>
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;cursor:pointer;text-transform:none;letter-spacing:0;color:var(--text-dark);"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> Official transcripts requested from school</label>
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;cursor:pointer;text-transform:none;letter-spacing:0;color:var(--text-dark);"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> Counselor letter of rec requested</label>
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;cursor:pointer;text-transform:none;letter-spacing:0;color:var(--text-dark);"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> Teacher letter of rec #1 requested</label>
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;cursor:pointer;text-transform:none;letter-spacing:0;color:var(--text-dark);"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> Teacher letter of rec #2 requested</label>
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;cursor:pointer;text-transform:none;letter-spacing:0;color:var(--text-dark);"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> Personal statement / common app essay drafted</label>
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;cursor:pointer;text-transform:none;letter-spacing:0;color:var(--text-dark);"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> Personal statement revised & proofed</label>
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;cursor:pointer;text-transform:none;letter-spacing:0;color:var(--text-dark);"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> Supplemental essays completed for all schools</label>
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;cursor:pointer;text-transform:none;letter-spacing:0;color:var(--text-dark);"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> All applications submitted & confirmed</label>
+          <label style="display:flex;align-items:center;gap:0.7rem;font-size:0.88rem;cursor:pointer;text-transform:none;letter-spacing:0;color:var(--text-dark);"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--gold);border:none;padding:0;"> Application fees paid or waivers obtained</label>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="icon">🗂️</span>Application Status by School</div>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;" id="appStatus">
+          <p style="font-size:0.82rem;color:var(--text-light);">Schools from your College List will appear here as you add them.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">✍️</span>Essay Bank</div>
+      <div class="form-group"><label>Common App Personal Statement (650 words)</label>
+        <textarea id="mainEssay" style="min-height:120px;" placeholder="Paste your personal statement draft here for reference…"></textarea>
+      </div>
+      <div class="form-group" style="margin-top:1rem;"><label>Supplemental Essay Notes / Drafts</label>
+        <textarea id="suppEssays" style="min-height:120px;" placeholder="Note which schools require supplements, topics covered, word limits…"></textarea>
+      </div>
+    </div>
+
+    <div class="section-nav">
+      <button class="nav-btn prev" onclick="showSection(5)">← Scholarships</button>
+      <span class="step-indicator">7 of 10</span>
+      <button class="nav-btn next" onclick="showSection(7)">Offers & Negotiation →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ 8. OFFERS & NEGOTIATION ═══════════════════════════════ -->
+  <div class="section" id="sec-7">
+    <div class="section-header">
+      <div class="section-eyebrow">Section 08</div>
+      <h1 class="section-title">Offers &amp; Negotiation</h1>
+      <p class="section-desc">Compare award letters side-by-side and prepare your negotiation strategy. The first offer is rarely the final offer.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">⚖️</span>Award Letter Comparison</div>
+      <div class="offers-grid" id="offersGrid">
+        <!-- populated by JS -->
+      </div>
+      <p id="noOffersMsg" style="font-size:0.85rem;color:var(--text-light);padding:1rem 0;">Add schools to your College List to compare award letters here.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🤝</span>Negotiation Playbook</div>
+      <div class="form-group"><label>Schools You Plan to Appeal</label>
+        <textarea id="appealSchools" style="min-height:60px;" placeholder="List schools and your reason for appealing (competing offer, change in circumstances, etc.)…"></textarea>
+      </div>
+      <div class="form-group" style="margin-top:1rem;"><label>Appeal Letter Draft</label>
+        <textarea id="appealDraft" style="min-height:120px;" placeholder="Draft your appeal letter here. Reference competing offers, unchanged circumstances, specific gap you're asking to close…"></textarea>
+      </div>
+      <div class="strategy-box">
+        <h4>📣 Negotiation Tips</h4>
+        <ul>
+          <li>Always be polite and express genuine interest in attending — schools help students they want to enroll.</li>
+          <li>Cite a competing offer from a comparable school as leverage. Provide the award letter as documentation.</li>
+          <li>Ask specifically: "Is there any additional institutional grant or scholarship available given our circumstances?"</li>
+          <li>Appeal through the financial aid office — not admissions — after you have an offer in hand.</li>
+          <li>If circumstances changed (job loss, medical bills, divorce), file a Professional Judgment request with supporting documents.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-nav">
+      <button class="nav-btn prev" onclick="showSection(6)">← Applications</button>
+      <span class="step-indicator">8 of 10</span>
+      <button class="nav-btn next" onclick="showSection(8)">Timeline →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ 9. TIMELINE ═══════════════════════════════ -->
+  <div class="section" id="sec-8">
+    <div class="section-header">
+      <div class="section-eyebrow">Section 09</div>
+      <h1 class="section-title">Timeline &amp; Action Plan</h1>
+      <p class="section-desc">Never miss a deadline. Check off milestones as you complete them.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title"><span class="icon">📅</span>Junior Year Milestones</div>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-month">Sep – Oct</div>
+            <label class="tl-check"><input type="checkbox" onchange="toggleDone(this)"> <span class="tl-task">Create College Board & Common App accounts</span></label>
+            <div class="tl-note">Start building your school list with notes on aid policies.</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-month">Oct – Nov</div>
+            <label class="tl-check"><input type="checkbox" onchange="toggleDone(this)"> <span class="tl-task">Take PSAT / National Merit qualifier</span></label>
+            <div class="tl-note">Score ≥ 99th percentile may qualify for National Merit Scholarship.</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-month">Jan – Mar</div>
+            <label class="tl-check"><input type="checkbox" onchange="toggleDone(this)"> <span class="tl-task">Take SAT / ACT for first time</span></label>
+            <div class="tl-note">Plan to retest in the fall if scores need improvement.</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-month">Mar – May</div>
+            <label class="tl-check"><input type="checkbox" onchange="toggleDone(this)"> <span class="tl-task">Run Net Price Calculators on all schools</span></label>
+            <div class="tl-note">Compare estimated costs before finalizing your list.</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-month">Summer</div>
+            <label class="tl-check"><input type="checkbox" onchange="toggleDone(this)"> <span class="tl-task">Draft Common App personal statement</span></label>
+            <div class="tl-note">Aim to have a polished draft before senior year begins.</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="icon">🎓</span>Senior Year Milestones</div>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-month">Aug – Sep</div>
+            <label class="tl-check"><input type="checkbox" onchange="toggleDone(this)"> <span class="tl-task">Finalize college list; request transcripts</span></label>
+            <div class="tl-note">Confirm application types: ED, EA, RD for each school.</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-month">Oct 1</div>
+            <label class="tl-check"><input type="checkbox" onchange="toggleDone(this)"> <span class="tl-task">FAFSA opens — submit ASAP</span></label>
+            <div class="tl-note">Many state and institutional aid programs are first-come, first-served.</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-month">Nov 1</div>
+            <label class="tl-check"><input type="checkbox" onchange="toggleDone(this)"> <span class="tl-task">Early Action / Early Decision deadlines</span></label>
+            <div class="tl-note">ED applicants: ensure financial plan is solid before binding commitment.</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-month">Jan – Feb</div>
+            <label class="tl-check"><input type="checkbox" onchange="toggleDone(this)"> <span class="tl-task">Regular Decision deadlines; CSS Profile due</span></label>
+            <div class="tl-note">Confirm all financial aid materials are received by each school.</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-month">Mar – Apr</div>
+            <label class="tl-check"><input type="checkbox" onchange="toggleDone(this)"> <span class="tl-task">Review all award letters; compare & negotiate</span></label>
+            <div class="tl-note">Use Section 08 negotiation tools to appeal low packages.</div></div>
+          <div class="tl-item"><div class="tl-dot"></div><div class="tl-month">May 1</div>
+            <label class="tl-check"><input type="checkbox" onchange="toggleDone(this)"> <span class="tl-task">National Decision Day — submit enrollment deposit</span></label>
+            <div class="tl-note">Notify all other schools of your decision as a courtesy.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📌</span>Custom Action Items</div>
+      <textarea id="customActions" style="min-height:100px;" placeholder="Add your own tasks, deadlines, and notes specific to your situation…"></textarea>
+    </div>
+
+    <div class="section-nav">
+      <button class="nav-btn prev" onclick="showSection(7)">← Offers & Negotiation</button>
+      <span class="step-indicator">9 of 10</span>
+      <button class="nav-btn next" onclick="showSection(9)">Final Decision →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ 10. FINAL DECISION ═══════════════════════════════ -->
+  <div class="section" id="sec-9">
+    <div class="section-header">
+      <div class="section-eyebrow">Section 10</div>
+      <h1 class="section-title">Final Decision</h1>
+      <p class="section-desc">Bring it all together. Score your top schools across the factors that matter most to you.</p>
+    </div>
+
+    <div class="decision-hero">
+      <h2>🎓 Decision Dashboard</h2>
+      <p>Rate each school on the factors below to make a clear, confident choice.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📊</span>Decision Scorecard</div>
+      <div class="form-grid" style="margin-bottom:1.5rem;">
+        <div class="form-group"><label>My #1 Choice School</label><input type="text" id="choice1" placeholder="School name"></div>
+        <div class="form-group"><label>Backup Choice</label><input type="text" id="choice2" placeholder="School name"></div>
+        <div class="form-group"><label>Final Accepted Net Cost (Annual)</label><input type="number" id="finalCost" placeholder="$" min="0" step="500"></div>
+        <div class="form-group"><label>Projected Graduation Debt</label><input type="number" id="finalDebt" placeholder="$" min="0" step="1000"></div>
+      </div>
+
+      <label style="font-size:0.75rem;font-weight:700;letter-spacing:0.06em;color:var(--text-mid);text-transform:uppercase;display:block;margin-bottom:1rem;">Score Your Top Choice (1–10)</label>
+      <div class="score-bars">
+        <div class="score-row"><span class="score-lbl">Academic Fit / Major Quality</span><div class="score-bar"><div class="score-fill" id="fill-academic" style="width:70%"></div></div><span class="score-val" id="val-academic">7</span><input type="range" min="1" max="10" value="7" style="display:none" oninput="updateScore('academic',this.value)"></div>
+        <div class="score-row"><span class="score-lbl">Net Cost / Financial Value</span><div class="score-bar"><div class="score-fill" id="fill-cost" style="width:80%"></div></div><span class="score-val" id="val-cost">8</span><input type="range" min="1" max="10" value="8" style="display:none" oninput="updateScore('cost',this.value)"></div>
+        <div class="score-row"><span class="score-lbl">Campus Culture / Social Fit</span><div class="score-bar"><div class="score-fill" id="fill-culture" style="width:60%"></div></div><span class="score-val" id="val-culture">6</span><input type="range" min="1" max="10" value="6" style="display:none" oninput="updateScore('culture',this.value)"></div>
+        <div class="score-row"><span class="score-lbl">Career / Job Placement</span><div class="score-bar"><div class="score-fill" id="fill-career" style="width:75%"></div></div><span class="score-val" id="val-career">7.5</span><input type="range" min="1" max="10" value="7" step="0.5" style="display:none" oninput="updateScore('career',this.value)"></div>
+        <div class="score-row"><span class="score-lbl">Location &amp; Campus</span><div class="score-bar"><div class="score-fill" id="fill-location" style="width:90%"></div></div><span class="score-val" id="val-location">9</span><input type="range" min="1" max="10" value="9" style="display:none" oninput="updateScore('location',this.value)"></div>
+        <div class="score-row"><span class="score-lbl">Gut Feeling / Excitement</span><div class="score-bar"><div class="score-fill" id="fill-gut" style="width:85%"></div></div><span class="score-val" id="val-gut">8.5</span><input type="range" min="1" max="10" value="8" step="0.5" style="display:none" oninput="updateScore('gut',this.value)"></div>
+      </div>
+      <p style="font-size:0.78rem;color:var(--slate);margin-top:1rem;">Click on any bar to adjust the score.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📝</span>Final Notes & Rationale</div>
+      <div class="form-group"><label>Why I'm Choosing This School</label>
+        <textarea id="finalRationale" style="min-height:100px;" placeholder="Write your reasoning — academic fit, financial value, career path, campus culture, family considerations…"></textarea>
+      </div>
+      <div class="form-group" style="margin-top:1rem;"><label>Concerns or Trade-offs Acknowledged</label>
+        <textarea id="finalConcerns" style="min-height:80px;" placeholder="What are you giving up or accepting? Being honest helps avoid regret."></textarea>
+      </div>
+    </div>
+
+    <div style="background:var(--navy);border-radius:var(--radius-lg);padding:2rem;text-align:center;margin-top:1.5rem;">
+      <div style="font-family:Helvetica,'Helvetica Neue',Arial,sans-serif;font-size:1.4rem;font-weight:700;color:var(--gold);margin-bottom:0.5rem;">🎉 You've completed the College Cost Strategist™</div>
+      <div style="font-size:0.88rem;color:var(--slate-light);margin-bottom:1.2rem;">Save your work and share with your family before May 1st Decision Day.</div>
+      <button onclick="saveData()" style="background:var(--gold);color:var(--navy);border:none;font-family:Helvetica,'Helvetica Neue',Arial,sans-serif;font-weight:700;font-size:0.9rem;padding:0.75rem 2rem;border-radius:10px;cursor:pointer;">💾 Export & Save</button>
+    </div>
+
+    <div class="section-nav">
+      <button class="nav-btn prev" onclick="showSection(8)">← Timeline</button>
+      <span class="step-indicator">10 of 10</span>
+      <span></span>
+    </div>
+  </div>
+
+</main>
+
+<script>
+let currentSection = 0;
+const colleges = [];
+
+// ── NAVIGATION ──
+function showSection(idx) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + idx).classList.add('active');
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  currentSection = idx;
+  document.getElementById('progressPill').textContent = 'Step ' + (idx + 1) + ' of 10';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (idx === 3) buildCOATable();
+  if (idx === 4) buildAidTable();
+  if (idx === 7) buildOffersGrid();
+}
+
+// ── COLLEGE LIST ──
+function addCollegeRow(name='', tier='Match', coa='', deadline='') {
+  const id = Date.now();
+  colleges.push({ id, name, tier, coa, deadline });
+  renderCollegeList();
+}
+
+function renderCollegeList() {
+  const el = document.getElementById('collegeList');
+  el.innerHTML = '';
+  colleges.forEach((c, i) => {
+    const div = document.createElement('div');
+    div.className = 'college-row';
+    div.innerHTML = `
+      <input type="text" value="${c.name}" placeholder="School name" oninput="colleges[${i}].name=this.value;updateCounts()">
+      <select onchange="colleges[${i}].tier=this.value;updateCounts();renderCollegeList()">
+        <option ${c.tier==='Reach'?'selected':''}>Reach</option>
+        <option ${c.tier==='Match'?'selected':''}>Match</option>
+        <option ${c.tier==='Safety'?'selected':''}>Safety</option>
+      </select>
+      <input type="number" value="${c.coa}" placeholder="$" oninput="colleges[${i}].coa=this.value" style="width:100%">
+      <input type="text" value="${c.deadline}" placeholder="MM/DD/YY" oninput="colleges[${i}].deadline=this.value" style="width:100%">
+      <button class="del-btn" onclick="removeCollege(${i})">×</button>
+    `;
+    el.appendChild(div);
+  });
+  updateCounts();
+}
+
+function removeCollege(i) {
+  colleges.splice(i, 1);
+  renderCollegeList();
+}
+
+function updateCounts() {
+  document.getElementById('reachCount').textContent = colleges.filter(c=>c.tier==='Reach').length;
+  document.getElementById('matchCount').textContent = colleges.filter(c=>c.tier==='Match').length;
+  document.getElementById('safetyCount').textContent = colleges.filter(c=>c.tier==='Safety').length;
+}
+
+// ── AUTO-SAVE & RESTORE ──
+const STORAGE_KEY = 'ccsp_data_v1';
+
+function getAllFormData() {
+  const data = {};
+  document.querySelectorAll('input[id], select[id], textarea[id]').forEach(el => {
+    if (el.type === 'checkbox') data[el.id] = el.checked;
+    else data[el.id] = el.value;
+  });
+  // checkboxes without ids (timeline, checklist) — save by index
+  const checks = document.querySelectorAll('input[type="checkbox"]:not([id])');
+  data._checks = Array.from(checks).map(c => c.checked);
+  // range sliders
+  document.querySelectorAll('input[type="range"]').forEach(r => {
+    if (r.id) data[r.id] = r.value;
+  });
+  return data;
+}
+
+function restoreFormData(data) {
+  if (!data) return;
+  Object.entries(data).forEach(([id, val]) => {
+    if (id === '_checks') return;
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.type === 'checkbox') { el.checked = val; }
+    else { el.value = val; }
+    // re-fire display updates for ranges
+    if (el.type === 'range') el.dispatchEvent(new Event('input'));
+  });
+  if (data._checks) {
+    const checks = document.querySelectorAll('input[type="checkbox"]:not([id])');
+    checks.forEach((c, i) => {
+      if (data._checks[i] !== undefined) {
+        c.checked = data._checks[i];
+        if (c.checked) {
+          const item = c.closest('.tl-item');
+          if (item) item.classList.add('done');
+        }
+      }
+    });
+  }
+}
+
+function autoSave() {
+  try {
+    const payload = {
+      colleges,
+      form: getAllFormData(),
+      savedAt: Date.now()
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    flashPill('✓ Auto-saved');
+  } catch(e) { console.warn('Auto-save failed', e); }
+}
+
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const payload = JSON.parse(raw);
+    // restore colleges array
+    if (payload.colleges && payload.colleges.length) {
+      colleges.length = 0;
+      payload.colleges.forEach(c => colleges.push(c));
+      renderCollegeList();
+    }
+    // restore form fields after a tick so DOM is ready
+    setTimeout(() => restoreFormData(payload.form), 50);
+    return true;
+  } catch(e) { console.warn('Load failed', e); return false; }
+}
+
+let flashTimer;
+function flashPill(msg) {
+  const pill = document.getElementById('progressPill');
+  const orig = 'Step ' + (currentSection + 1) + ' of 10';
+  pill.textContent = msg;
+  clearTimeout(flashTimer);
+  flashTimer = setTimeout(() => pill.textContent = orig, 1800);
+}
+
+// Debounced auto-save on any input change
+let saveTimer;
+document.addEventListener('input', () => { clearTimeout(saveTimer); saveTimer = setTimeout(autoSave, 800); });
+document.addEventListener('change', () => { clearTimeout(saveTimer); saveTimer = setTimeout(autoSave, 800); });
+
+// Init: load saved data or seed with sample colleges
+const hadSavedData = loadFromStorage();
+if (!hadSavedData) {
+  addCollegeRow('University of Texas at Austin', 'Match', '30000', '12/1');
+  addCollegeRow('Vanderbilt University', 'Reach', '80000', '1/1');
+  addCollegeRow('Texas State University', 'Safety', '22000', '3/1');
+}
+
+function clearStorage() {
+  if (confirm('Clear all saved data and start fresh? This cannot be undone.')) {
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+}
+
+// ── COA TABLE ──
+function buildCOATable() {
+  const tbody = document.getElementById('coaBody');
+  tbody.innerHTML = '';
+  const schools = colleges.filter(c=>c.name.trim());
+  if (!schools.length) { tbody.innerHTML = '<tr><td colspan="6" style="color:var(--text-light);font-size:0.83rem;padding:1rem;">Add schools to your College List first.</td></tr>'; return; }
+  schools.forEach(c => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="font-weight:600">${c.name}</td>
+      <td><input type="number" placeholder="$" oninput="updateCOA(this)" style="width:110px;"></td>
+      <td><input type="number" placeholder="$" oninput="updateCOA(this)" style="width:110px;"></td>
+      <td><input type="number" value="1200" oninput="updateCOA(this)" style="width:90px;"></td>
+      <td><input type="number" value="2000" oninput="updateCOA(this)" style="width:90px;"></td>
+      <td class="net-cost">—</td>
+    `;
+    tr.querySelectorAll('input').forEach(inp => inp.addEventListener('input', () => {
+      const cells = tr.querySelectorAll('input');
+      const total = Array.from(cells).reduce((s,i)=>s+(parseFloat(i.value)||0),0);
+      tr.querySelector('.net-cost').textContent = '$'+total.toLocaleString();
+    }));
+    tbody.appendChild(tr);
+  });
+}
+
+// ── AID TABLE ──
+function buildAidTable() {
+  const tbody = document.getElementById('aidBody');
+  tbody.innerHTML = '';
+  const schools = colleges.filter(c=>c.name.trim());
+  if (!schools.length) { tbody.innerHTML = '<tr><td colspan="7" style="color:var(--text-light);font-size:0.83rem;padding:1rem;">Add schools to your College List first.</td></tr>'; return; }
+  schools.forEach(c => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="font-weight:600">${c.name}</td>
+      <td><input type="number" placeholder="$" style="width:120px;" class="aidInput" oninput="calcTotalFree(this)"></td>
+      <td><input type="number" placeholder="$" style="width:110px;" class="aidInput" oninput="calcTotalFree(this)"></td>
+      <td><input type="number" placeholder="$" style="width:100px;" class="aidInput" oninput="calcTotalFree(this)"></td>
+      <td><input type="number" placeholder="$" style="width:100px;"></td>
+      <td><input type="number" placeholder="$" style="width:100px;"></td>
+      <td class="money-display">—</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function calcTotalFree(inp) {
+  const row = inp.closest('tr');
+  const freeInputs = row.querySelectorAll('td:nth-child(2) input, td:nth-child(3) input, td:nth-child(4) input');
+  const total = Array.from(freeInputs).reduce((s,i)=>s+(parseFloat(i.value)||0),0);
+  row.querySelector('.money-display').textContent = '$'+total.toLocaleString();
+}
+
+// ── OFFERS GRID ──
+function buildOffersGrid() {
+  const grid = document.getElementById('offersGrid');
+  const msg = document.getElementById('noOffersMsg');
+  const schools = colleges.filter(c=>c.name.trim()).slice(0,4);
+  if (!schools.length) { grid.innerHTML=''; msg.style.display='block'; return; }
+  msg.style.display='none';
+  grid.innerHTML = schools.map((c,i) => `
+    <div class="offer-card ${i===0?'winner':''}">
+      ${i===0?'<div class="winner-badge">Top Pick</div>':''}
+      <div class="offer-school">${c.name}</div>
+      <div class="offer-line"><span class="lbl">COA (sticker)</span><span class="val">$${c.coa?parseInt(c.coa).toLocaleString():'—'}</span></div>
+      <div class="offer-line"><span class="lbl">Grants & Scholarships</span><span class="val green" contenteditable="true" style="cursor:text;outline:none;">click to edit</span></div>
+      <div class="offer-line"><span class="lbl">Work-Study</span><span class="val" contenteditable="true" style="cursor:text;outline:none;">—</span></div>
+      <div class="offer-line"><span class="lbl">Loans Offered</span><span class="val" contenteditable="true" style="cursor:text;outline:none;">—</span></div>
+      <div class="offer-line" style="margin-top:0.5rem;background:rgba(13,27,42,0.03);border-radius:6px;padding:0.4rem 0.5rem;"><span class="lbl" style="font-weight:700;">Net Cost</span><span class="val navy" contenteditable="true" style="cursor:text;outline:none;">—</span></div>
+      <div class="offer-line"><span class="lbl">Appealed?</span>
+        <select style="font-size:0.8rem;padding:0.2rem 0.4rem;border-radius:5px;"><option>No</option><option>Submitted</option><option>Awarded More</option><option>Denied</option></select>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── ROI CALCULATOR ──
+function calcROI() {
+  const debt = parseFloat(document.getElementById('gradDebt').value) || 0;
+  const salary = parseFloat(document.getElementById('startSalary').value) || 0;
+  if (!debt || !salary) { alert('Enter Expected Graduation Debt and Starting Salary first.'); return; }
+  const dti = (debt / salary).toFixed(2);
+  const r = 0.055 / 12;
+  const n = 120;
+  const payment = debt * (r * Math.pow(1+r,n)) / (Math.pow(1+r,n)-1);
+  const annualPayment = payment * 12;
+  const breakEven = (annualPayment > 0) ? (debt / annualPayment).toFixed(1) : '—';
+  document.getElementById('roiDTI').textContent = dti + '×';
+  document.getElementById('roiBE').textContent = breakEven + ' yrs';
+  document.getElementById('roiMP').textContent = '$' + Math.round(payment).toLocaleString();
+}
+
+// ── SCHOLARSHIP ROWS ──
+function addScholRow() {
+  const tbody = document.getElementById('scholBody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" placeholder="Scholarship name" style="width:160px;"></td>
+    <td><input type="text" placeholder="Sponsor org" style="width:130px;"></td>
+    <td><input type="number" placeholder="$" style="width:90px;"></td>
+    <td><input type="text" placeholder="MM/DD" style="width:80px;"></td>
+    <td><select style="width:120px;"><option>To Apply</option><option>Applied</option><option>Awarded</option><option>Denied</option></select></td>
+    <td><input type="text" placeholder="Notes" style="width:120px;"></td>
+  `;
+  tbody.appendChild(tr);
+}
+
+// ── TIMELINE CHECK ──
+function toggleDone(cb) {
+  const item = cb.closest('.tl-item');
+  if (cb.checked) item.classList.add('done');
+  else item.classList.remove('done');
+}
+
+// ── SCORE BARS (click to edit) ──
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.score-bar').forEach((bar, i) => {
+    const ranges = document.querySelectorAll('.score-bars input[type="range"]');
+    if (ranges[i]) {
+      bar.style.cursor = 'pointer';
+      bar.addEventListener('click', (e) => {
+        const pct = e.offsetX / bar.offsetWidth;
+        const val = Math.round(pct * 10 * 2) / 2;
+        ranges[i].value = val;
+        ranges[i].dispatchEvent(new Event('input'));
+      });
+    }
+  });
+});
+
+function updateScore(key, val) {
+  document.getElementById('fill-' + key).style.width = (parseFloat(val) * 10) + '%';
+  document.getElementById('val-' + key).textContent = val;
+}
+
+// ── MANUAL SAVE (also triggers localStorage write) ──
+function saveData() {
+  autoSave();
+  // also export JSON backup
+  const data = { colleges, form: getAllFormData(), savedAt: new Date().toLocaleString() };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'college-cost-strategy.json';
+  a.click();
+}
+</script>
+</body>
+</html>
